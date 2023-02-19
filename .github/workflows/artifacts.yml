@@ -35,6 +35,7 @@ jobs:
         if-no-files-found: error
 
   artifacts-steamrt-sniper:
+    if: ${{ false }}
     runs-on: ubuntu-20.04
     container: registry.gitlab.steamos.cloud/steamrt/sniper/sdk:beta
 
