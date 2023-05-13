@@ -335,11 +335,8 @@ namespace dxvk {
 
 
   HRESULT D3D11SwapChain::PresentImage(UINT SyncInterval) {
-    Com<ID3D11DeviceContext> deviceContext = nullptr;
-    m_parent->GetImmediateContext(&deviceContext);
-
     // Flush pending rendering commands before
-    auto immediateContext = static_cast<D3D11ImmediateContext*>(deviceContext.ptr());
+    auto immediateContext = m_parent->GetContext();
     immediateContext->EndFrame();
     immediateContext->Flush();
 
@@ -415,7 +412,7 @@ namespace dxvk {
       cCommandList = m_context->endRecording()
     ] (DxvkContext* ctx) {
       cCommandList->setWsiSemaphores(cSync);
-      m_device->submitCommandList(cCommandList);
+      m_device->submitCommandList(cCommandList, nullptr);
 
       if (cHud != nullptr && !cFrameId)
         cHud->update();
@@ -550,7 +547,8 @@ namespace dxvk {
       VkImage imageHandle = m_presenter->getImage(i).image;
       
       Rc<DxvkImage> image = new DxvkImage(
-        m_device.ptr(), imageInfo, imageHandle);
+        m_device.ptr(), imageInfo, imageHandle,
+        VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 
       m_imageViews[i] = new DxvkImageView(
         m_device->vkd(), image, viewInfo);
@@ -630,7 +628,8 @@ namespace dxvk {
       subresources, VK_IMAGE_LAYOUT_UNDEFINED);
 
     m_device->submitCommandList(
-      m_context->endRecording());
+      m_context->endRecording(),
+      nullptr);
   }
 
 
