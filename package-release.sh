@@ -84,7 +84,7 @@ function package {
   rm -R "dxvk-$DXVK_VERSION"
 }
 
-curl -L "https://github.com/eebssk1/mingw-gcc-build/releases/download/67de7744/mingw-gcc.tgz" | tar -zxf -
+curl -L "https://github.com/eebssk1/mingw-gcc-build/releases/download/c0ea1595/mingw-gcc.tgz" | tar -zxf -
 export PATH=$PWD/mingw-gcc/i686-w64-mingw32/bin:$PWD/mingw-gcc/x86_64-w64-mingw32/bin:$PATH
 
 build_arch 64
